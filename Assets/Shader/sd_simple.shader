@@ -24,14 +24,7 @@ Shader "Custom/Simple"
             #pragma vertex Vert
             #pragma fragment Frag
 
-            cbuffer UnityPerDraw {
-                float4x4 unity_ObjectToWorld;
-                float4x4 unity_WorldToObject;
-                float4 unity_LODFade;
-                half4 unity_WorldTransformParams;
-            };
-
-            float4x4 unity_MatrixVP;
+            #include "Assets/Source/Render/ShaderLibrary/Core.hlsl"
 
             cbuffer UnityPerMaterial {
                 float4 _Color;
@@ -50,8 +43,8 @@ Shader "Custom/Simple"
             Varyings Vert(Attributes input)
             {
                 Varyings output;
-                float4 positionWS = mul(unity_ObjectToWorld, input.positionOS);
-                output.positionCS = mul(unity_MatrixVP, positionWS);
+                float4 positionWS = TransformObjectToWorld(input.positionOS);
+                output.positionCS = TransformWorldToHClip(positionWS);
 
                 return output;
             }
