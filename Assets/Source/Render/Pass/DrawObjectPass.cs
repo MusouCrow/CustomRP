@@ -3,10 +3,25 @@ using UnityEngine.Rendering;
 
 namespace Game.Render {
     public class DrawObjectPass : IRenderPass {
+        private string[] lightModes;
+        private FilteringSettings filteringSettings;
+
+        public bool IsOpaque {
+            get;
+            private set;
+        }
+
+        public DrawObjectPass(bool isOpaque) {
+            this.IsOpaque = isOpaque;
+            this.lightModes = new string[] {"Forward", "SRPDefaultUnlit"};
+
+            var renderQueueRange = isOpaque ? RenderQueueRange.opaque : RenderQueueRange.transparent;
+            this.filteringSettings = new FilteringSettings(renderQueueRange);
+        }
+
         public void Render(ref ScriptableRenderContext context, ref RenderData data) {
-            var drawingSettings = RenderUtil.CreateDrawingSettings(ref data, "Forward");
-            var filteringSettings = FilteringSettings.defaultValue;
-            context.DrawRenderers(data.cullingResults, ref drawingSettings, ref filteringSettings);
+            var drawingSettings = RenderUtil.CreateDrawingSettings(ref data, this.lightModes, this.IsOpaque);
+            context.DrawRenderers(data.cullingResults, ref drawingSettings, ref this.filteringSettings);
         }
 
         public void Clean(ref ScriptableRenderContext context, ref RenderData data) {

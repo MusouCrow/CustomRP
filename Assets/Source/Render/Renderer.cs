@@ -9,7 +9,8 @@ namespace Game.Render {
         public Renderer() {
             this.passes = new List<IRenderPass>() {
                 new SetupPass(),
-                new DrawObjectPass(),
+                new DrawObjectPass(true),
+                new DrawObjectPass(false),
                 new FinalPass()
             };
 
