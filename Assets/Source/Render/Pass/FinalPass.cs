@@ -4,21 +4,13 @@ using UnityEngine.Experimental.Rendering;
 
 namespace Game.Render {
     public class FinalPass : IRenderPass {
-        private ProfilingSampler profilingSampler;
-
-        public FinalPass() {
-            this.profilingSampler = new ProfilingSampler("FinalPass");
-        }
-
         public void Render(ref ScriptableRenderContext context, ref RenderData data) {
-            var cmd = CommandBufferPool.Get();
+            var cmd = CommandBufferPool.Get("FinalPass");
 
-            using (new ProfilingScope(cmd, this.profilingSampler)) {
-                var id = Shader.PropertyToID("_TestTexture");
-                var srcRTI = new RenderTargetIdentifier(id);
-                var dstRTI = new RenderTargetIdentifier(data.camera.targetTexture);
-                cmd.Blit(srcRTI, dstRTI);
-            }
+            var tid = RenderConst.CAMERA_TEXTURE_ID;
+            var srcRTI = new RenderTargetIdentifier(tid);
+            var dstRTI = new RenderTargetIdentifier(data.camera.targetTexture);
+            cmd.Blit(srcRTI, dstRTI);
             
             context.ExecuteCommandBuffer(cmd);
             CommandBufferPool.Release(cmd);

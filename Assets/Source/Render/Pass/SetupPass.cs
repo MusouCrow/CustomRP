@@ -1,0 +1,31 @@
+using UnityEngine;
+using UnityEngine.Rendering;
+
+namespace Game.Render {
+    public class SetupPass : IRenderPass {
+        public void Render(ref ScriptableRenderContext context, ref RenderData data) {
+            var cmd = CommandBufferPool.Get("SetupPass");
+            var tid = RenderConst.CAMERA_TEXTURE_ID;
+            var rtd = data.cameraRTD;
+            var rti = new RenderTargetIdentifier(tid);
+            
+            cmd.GetTemporaryRT(tid, rtd, FilterMode.Bilinear);
+            cmd.SetRenderTarget(rti, 
+                RenderBufferLoadAction.Load, RenderBufferStoreAction.Store,
+                RenderBufferLoadAction.Load, RenderBufferStoreAction.DontCare
+            );
+            cmd.ClearRenderTarget(true, true, data.camera.backgroundColor.linear);
+
+            context.ExecuteCommandBuffer(cmd);
+            CommandBufferPool.Release(cmd);
+        }
+
+        public void Clean(ref ScriptableRenderContext context, ref RenderData data) {
+            var cmd = CommandBufferPool.Get("SetupPass");
+            var tid = RenderConst.CAMERA_TEXTURE_ID;
+            cmd.ReleaseTemporaryRT(tid);
+            context.ExecuteCommandBuffer(cmd);
+            CommandBufferPool.Release(cmd);
+        }
+    }
+}

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.Experimental.Rendering;
 
 namespace Game.Render {
     public class Renderer {
@@ -9,7 +8,8 @@ namespace Game.Render {
 
         public Renderer() {
             this.passes = new List<IRenderPass>() {
-                new TestPass(),
+                new SetupPass(),
+                new DrawObjectPass(),
                 new FinalPass()
             };
 

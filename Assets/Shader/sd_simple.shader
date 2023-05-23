@@ -1,5 +1,10 @@
 Shader "Custom/Simple"
 {
+    Properties
+    {
+        [MainColor] _Color("Color", Color) = (1, 1, 1, 1)
+    }
+    
     SubShader
     {
         Pass
@@ -18,6 +23,10 @@ Shader "Custom/Simple"
             };
 
             float4x4 unity_MatrixVP;
+
+            cbuffer UnityPerMaterial {
+                float4 _Color;
+            };
             
             struct Attributes
             {
@@ -40,7 +49,7 @@ Shader "Custom/Simple"
 
             float4 Frag(Varyings input) : SV_Target
             {
-                return 1;
+                return _Color;
             }
 
             ENDHLSL
