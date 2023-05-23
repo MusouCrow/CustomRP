@@ -26,9 +26,9 @@ Shader "Custom/Simple"
 
             #include "Assets/Source/Render/ShaderLibrary/Core.hlsl"
 
-            cbuffer UnityPerMaterial {
-                float4 _Color;
-            };
+            CBUFFER_START(UnityPerMaterial)
+            float4 _Color;
+            CBUFFER_END
             
             struct Attributes
             {

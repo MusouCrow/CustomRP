@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DefaultShader: {fileID: 4800000, guid: 8977b87c0bebf4fd2a3fbe2be4c7b436, type: 3}
   DefaultMaterial: {fileID: 2100000, guid: c2978d5f86a954fa7a11481795a0b2a7, type: 2}
+  MSAA: 2
+  RenderScale: 1.2
