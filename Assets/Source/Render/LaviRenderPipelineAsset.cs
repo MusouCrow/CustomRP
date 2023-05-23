@@ -4,8 +4,26 @@ using UnityEngine.Rendering;
 namespace Game.Render {
     [CreateAssetMenu(menuName = "Rendering/LaviRenderPipelineAsset")]
     public class LaviRenderPipelineAsset : RenderPipelineAsset {
+        public Shader DefaultShader;
+        public Material DefaultMaterial;
+        public MSAASamples MSAA = MSAASamples.None;
+        [Range(0.25f, 2)]
+        public float RenderScale = 1;
+
+        public override Material defaultMaterial {
+            get {
+                return this.DefaultMaterial;
+            }
+        }
+
+        public override Shader defaultShader {
+            get {
+                return this.DefaultShader;
+            }
+        }
+
         protected override RenderPipeline CreatePipeline() {
-            return new LaviRenderPipeline();
+            return new LaviRenderPipeline(this);
         }
     }
 }

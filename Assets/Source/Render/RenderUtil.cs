@@ -25,11 +25,13 @@ namespace Game.Render {
             return settings;
         }
 
-        public static RenderTextureDescriptor CreateRenderTextureDescriptor(Camera camera) {
-            var rtd = new RenderTextureDescriptor(camera.pixelWidth, camera.pixelHeight);
+        public static RenderTextureDescriptor CreateCameraRenderTextureDescriptor(Camera camera, MSAASamples msaaSamples, float renderScale) {
+            var width = (int)(camera.pixelWidth * renderScale);
+            var height = (int)(camera.pixelHeight * renderScale);
+            var rtd = new RenderTextureDescriptor(width, height);
             rtd.graphicsFormat = GraphicsFormat.B10G11R11_UFloatPack32;
             rtd.depthBufferBits = 32;
-            rtd.msaaSamples = 1;
+            rtd.msaaSamples = (int)msaaSamples;
             rtd.sRGB = true;
             rtd.bindMS = false;
             rtd.enableRandomWrite = false;

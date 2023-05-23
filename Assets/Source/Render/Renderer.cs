@@ -5,15 +5,17 @@ using UnityEngine.Rendering;
 namespace Game.Render {
     public class Renderer {
         private List<IRenderPass> passes;
+        private LaviRenderPipelineAsset asset;
 
-        public Renderer() {
+        public Renderer(LaviRenderPipelineAsset asset) {
             this.passes = new List<IRenderPass>() {
                 new SetupPass(),
                 new DrawObjectPass(true),
                 new DrawObjectPass(false),
                 new FinalPass()
             };
-
+            
+            this.asset = asset;
             GraphicsSettings.useScriptableRenderPipelineBatching = true;
         }
 
@@ -21,11 +23,11 @@ namespace Game.Render {
             camera.TryGetCullingParameters(out var cullingParameters);
             var cullingResults = context.Cull(ref cullingParameters);
             context.SetupCameraProperties(camera);
-
+            
             var data = new RenderData() {
                 camera = camera,
                 cullingResults = cullingResults,
-                cameraRTD = RenderUtil.CreateRenderTextureDescriptor(camera)
+                cameraRTD = RenderUtil.CreateCameraRenderTextureDescriptor(camera, this.asset.MSAA, this.asset.RenderScale)
             };
 
             for (int i = 0; i < this.passes.Count; i++) {

@@ -6,8 +6,8 @@ namespace Game.Render {
     public class LaviRenderPipeline : RenderPipeline {
         private Renderer renderer;
 
-        public LaviRenderPipeline() {
-            this.renderer = new Renderer();
+        public LaviRenderPipeline(LaviRenderPipelineAsset asset) {
+            this.renderer = new Renderer(asset);
         }
 
         protected override void Render(ScriptableRenderContext context, Camera[] cameras) {
