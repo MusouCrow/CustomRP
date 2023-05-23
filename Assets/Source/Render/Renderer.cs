@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Experimental.Rendering;
 
 namespace Game.Render {
     public class Renderer {
@@ -22,7 +23,8 @@ namespace Game.Render {
 
             var data = new RenderData() {
                 camera = camera,
-                cullingResults = cullingResults
+                cullingResults = cullingResults,
+                cameraRTD = RenderUtil.CreateRenderTextureDescriptor(camera)
             };
 
             for (int i = 0; i < this.passes.Count; i++) {

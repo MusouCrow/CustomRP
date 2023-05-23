@@ -5,7 +5,7 @@ using UnityEngine.Experimental.Rendering;
 namespace Game.Render {
     public class TestPass : IRenderPass {
         public void Render(ref ScriptableRenderContext context, ref RenderData data) {
-            var rtd = new RenderTextureDescriptor(1280, 720, GraphicsFormat.R8G8B8A8_UNorm, 32);
+            var rtd = data.cameraRTD;
             var id = Shader.PropertyToID("_TestTexture");
             var rti = new RenderTargetIdentifier(id);
 
