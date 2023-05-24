@@ -9,6 +9,7 @@ namespace Game.Render {
 
         public Renderer(LaviRenderPipelineAsset asset) {
             this.passes = new List<IRenderPass>() {
+                new MainLightShadowPass(),
                 new SetupPass(),
                 new DrawObjectPass(true),
                 new DrawObjectPass(false),
