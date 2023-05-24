@@ -9,6 +9,7 @@ namespace Game.Render {
         public MSAASamples MSAA = MSAASamples.None;
         [Range(0.25f, 2)]
         public float RenderScale = 1;
+        public ShadowResolution ShadowResolution = ShadowResolution._2048;
 
         public override Material defaultMaterial {
             get {

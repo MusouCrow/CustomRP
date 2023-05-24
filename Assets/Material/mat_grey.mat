@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: mat_grey
-  m_Shader: {fileID: 4800000, guid: 8977b87c0bebf4fd2a3fbe2be4c7b436, type: 3}
+  m_Shader: {fileID: 4800000, guid: 8b3ac8b8fac0148fdb9aa6a678cf657a, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords:
   - _ZWRITE_ON

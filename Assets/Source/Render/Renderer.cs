@@ -8,20 +8,23 @@ namespace Game.Render {
         private LaviRenderPipelineAsset asset;
 
         public Renderer(LaviRenderPipelineAsset asset) {
+            this.asset = asset;
+
             this.passes = new List<IRenderPass>() {
-                new MainLightShadowPass(),
+                new MainLightShadowPass(this.asset),
                 new SetupPass(),
                 new DrawObjectPass(true),
                 new DrawObjectPass(false),
                 new FinalPass()
             };
-            
-            this.asset = asset;
+
             GraphicsSettings.useScriptableRenderPipelineBatching = true;
         }
 
         public void Render(ref ScriptableRenderContext context, Camera camera) {
             camera.TryGetCullingParameters(out var cullingParameters);
+            cullingParameters.shadowDistance = 50;
+
             var cullingResults = context.Cull(ref cullingParameters);
             context.SetupCameraProperties(camera);
             
