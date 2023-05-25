@@ -18,7 +18,7 @@ namespace Game.Render {
             var cmd = CommandBufferPool.Get("MainLightShadowPass");
 
             int shadowResolution = (int)this.asset.ShadowResolution;
-            this.ReadyTexture(cmd, ref context, ref data, shadowResolution);
+            var rti = this.ReadyTexture(cmd, ref context, ref data, shadowResolution);
 
             var light = data.cullingResults.visibleLights[0];
             data.cullingResults.ComputeDirectionalShadowMatricesAndCullingPrimitives(0, 0, 1, new Vector3(1, 0, 0), shadowResolution, light.light.shadowNearPlane,
@@ -37,9 +37,17 @@ namespace Game.Render {
             var shadowSettings = new ShadowDrawingSettings(data.cullingResults, 0);
             shadowSettings.splitData = shadowSplitData;
 
+            var tileMatrix = Matrix4x4.identity;
+            tileMatrix.m00 = tileMatrix.m11 = 0.5f;
+            tileMatrix.m03 = tileMatrix.m13 = 0;
+            var worldToShadowMatrix = this.CalculateWorldToShadowMatrix(ref viewMatrix, ref projMatrix);
+            // worldToShadowMatrix = tileMatrix * worldToShadowMatrix;
+
             context.DrawShadows(ref shadowSettings);
 
             cmd.DisableScissorRect();
+            cmd.SetGlobalTexture(RenderConst.SHADOW_TEXTURE_ID, rti);
+            cmd.SetGlobalMatrix(RenderConst.WORLD_TO_SHADOW_MTX_ID, worldToShadowMatrix);
             context.ExecuteCommandBuffer(cmd);
             context.SetupCameraProperties(data.camera);
             cmd.Clear();
@@ -76,7 +84,7 @@ namespace Game.Render {
             return true;
         }
 
-        private void ReadyTexture(CommandBuffer cmd, ref ScriptableRenderContext context, ref RenderData data, int size) {
+        private RenderTargetIdentifier ReadyTexture(CommandBuffer cmd, ref ScriptableRenderContext context, ref RenderData data, int size) {
             var tid = RenderConst.SHADOW_TEXTURE_ID;
             var rtd = this.CreateRenderTextureDescriptor(size);
             var rti = new RenderTargetIdentifier(tid);
@@ -89,12 +97,30 @@ namespace Game.Render {
             cmd.ClearRenderTarget(true, true, data.camera.backgroundColor.linear);
             context.ExecuteCommandBuffer(cmd);
             cmd.Clear();
+
+            return rti;
         }
 
         private RenderTextureDescriptor CreateRenderTextureDescriptor(int size) {
             var rtd = new RenderTextureDescriptor(size, size, RenderTextureFormat.Shadowmap, 16);
 
             return rtd;
+        }
+
+        private Matrix4x4 CalculateWorldToShadowMatrix(ref Matrix4x4 viewMatrix, ref Matrix4x4 projMatrix) {
+            if (SystemInfo.usesReversedZBuffer) {
+                projMatrix.m20 -= projMatrix.m20;
+                projMatrix.m21 -= projMatrix.m21;
+                projMatrix.m22 -= projMatrix.m22;
+                projMatrix.m23 -= projMatrix.m23;
+            }
+
+            // [-1, 1] -> [0, 1]
+            var scaleOffset = Matrix4x4.identity;
+            scaleOffset.m00 = scaleOffset.m11 = scaleOffset.m22 = 0.5f;
+		    scaleOffset.m03 = scaleOffset.m13 = scaleOffset.m23 = 0.5f;
+
+            return scaleOffset * (projMatrix * viewMatrix);
         }
     }
 }
