@@ -48,7 +48,11 @@ namespace Game.Render {
 
             var lightDirection = -light.localToWorldMatrix.GetColumn(2);
             cmd.SetGlobalVector(RenderConst.MAIN_LIGHT_DIRECTION_ID, lightDirection);
-            // cmd.SetGlobalVector(RenderConst.SHADOW_BIAS_ID, )
+
+            var softShadow = light.light.shadows > LightShadows.None ? 1 : 0;
+            var shadowBias = RenderUtil.GetShadowBias(ref light, projMatrix, shadowResolution);
+            var shadowParam = new Vector4(shadowBias.x, shadowBias.y, light.light.shadowStrength, softShadow);
+            cmd.SetGlobalVector(RenderConst.SHADOW_PARAM_ID, shadowParam);
             
             context.ExecuteCommandBuffer(cmd);
             context.SetupCameraProperties(data.camera);

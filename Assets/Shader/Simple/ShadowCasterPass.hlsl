@@ -1,10 +1,12 @@
 #pragma once
 
 #include "./Include.hlsl"
+#include "Assets/Source/Render/ShaderLibrary/Shadow.hlsl"
 
 struct Attributes
 {
     float4 positionOS : POSITION;
+    float3 normalOS : NORMAL;
 };
 
 struct Varyings
@@ -15,7 +17,11 @@ struct Varyings
 Varyings Vert(Attributes input)
 {
     Varyings output;
-    float4 positionWS = TransformObjectToWorld(input.positionOS);
+    
+    float3 normalWS = TransformObjectToWorldNormal(input.positionOS);
+    float3 positionWS = TransformObjectToWorld(input.positionOS);
+    positionWS = ApplyShadowBias(positionWS, normalWS);
+    
     float4 positionCS = TransformWorldToHClip(positionWS);
 
 #if UNITY_REVERSED_Z

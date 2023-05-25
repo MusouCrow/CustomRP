@@ -17,3 +17,4 @@ MonoBehaviour:
   MSAA: 2
   RenderScale: 1.2
   ShadowResolution: 2048
+  shadowDistance: 50

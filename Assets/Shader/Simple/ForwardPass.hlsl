@@ -11,13 +11,14 @@ struct Attributes
 struct Varyings
 {
     float4 positionCS : SV_POSITION;
-    float4 positionWS : TEXCOORD0;
+    float3 positionWS : TEXCOORD0;
 };
 
 Varyings Vert(Attributes input)
 {
     Varyings output;
-    float4 positionWS = TransformObjectToWorld(input.positionOS);
+
+    float3 positionWS = TransformObjectToWorld(input.positionOS);
     output.positionCS = TransformWorldToHClip(positionWS);
     output.positionWS = positionWS;
 

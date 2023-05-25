@@ -54,5 +54,18 @@ namespace Game.Render {
 
             return -1;
         }
+
+        public static Vector2 GetShadowBias(ref VisibleLight light, Matrix4x4 projMatrix, int shadowResolution) {
+            if (light.lightType != LightType.Directional) {
+                return Vector2.zero;
+            }
+
+            float frustumSize = 2.0f / projMatrix.m00;
+            float texelSize = frustumSize / shadowResolution;
+            float depthBias = -light.light.shadowBias * texelSize;
+            float normalBias = -light.light.shadowNormalBias * texelSize;
+            
+            return new Vector2(depthBias, normalBias);
+        }
     }
 }
