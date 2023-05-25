@@ -24,6 +24,9 @@ Shader "Custom/Simple"
             #pragma vertex Vert
             #pragma fragment Frag
 
+            #pragma multi_compile_fragment _ _MAIN_LIGHT_SHADOWS
+            #pragma multi_compile_fragment _ _SHADOWS_SOFT
+
             #include "./ForwardPass.hlsl"
 
             ENDHLSL

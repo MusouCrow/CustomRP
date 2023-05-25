@@ -11,11 +11,14 @@ namespace Game.Render {
         }
 
         public bool Setup(ref ScriptableRenderContext context, ref RenderData data) {
-            if (data.mainLightIndex == -1) {
-                return false;
-            }
-            
-            return data.cullingResults.GetShadowCasterBounds(data.mainLightIndex, out var bounds);
+            var ok = data.mainLightIndex > -1 && data.cullingResults.GetShadowCasterBounds(data.mainLightIndex, out var bounds);
+            var cmd = CommandBufferPool.Get("MainLightShadowPass");
+
+            CoreUtils.SetKeyword(cmd, RenderConst.MAIN_LIGHT_SHADOW_KEYWORD, ok);
+            context.ExecuteCommandBuffer(cmd);
+            CommandBufferPool.Release(cmd);
+
+            return ok;
         }
 
         public void Render(ref ScriptableRenderContext context, ref RenderData data) {
@@ -49,11 +52,16 @@ namespace Game.Render {
             var lightDirection = -light.localToWorldMatrix.GetColumn(2);
             cmd.SetGlobalVector(RenderConst.MAIN_LIGHT_DIRECTION_ID, lightDirection);
 
-            var softShadow = light.light.shadows > LightShadows.None ? 1 : 0;
+            var softShadow = light.light.shadows == LightShadows.Soft;
             var shadowBias = RenderUtil.GetShadowBias(ref light, projMatrix, shadowResolution);
-            var shadowParam = new Vector4(shadowBias.x, shadowBias.y, light.light.shadowStrength, softShadow);
+            var shadowParam = new Vector4(shadowBias.x, shadowBias.y, light.light.shadowStrength, softShadow ? 1 : 0);
             cmd.SetGlobalVector(RenderConst.SHADOW_PARAM_ID, shadowParam);
             
+            var shadowTextureSize = new Vector4(1.0f / shadowResolution, 1.0f / shadowResolution, shadowResolution, shadowResolution);
+            cmd.SetGlobalVector(RenderConst.SHADOW_TEXUTRE_SIZE_ID, shadowTextureSize);
+
+            CoreUtils.SetKeyword(cmd, RenderConst.SOFT_SHADOW_KEYWORD, softShadow);
+
             context.ExecuteCommandBuffer(cmd);
             context.SetupCameraProperties(data.camera);
             cmd.Clear();

@@ -64,6 +64,11 @@ namespace Game.Render {
             float texelSize = frustumSize / shadowResolution;
             float depthBias = -light.light.shadowBias * texelSize;
             float normalBias = -light.light.shadowNormalBias * texelSize;
+
+            if (light.light.shadows == LightShadows.Soft) {
+                depthBias *= RenderConst.SHADOW_BIAS_RADIUS;
+                normalBias *= RenderConst.SHADOW_BIAS_RADIUS;
+            }
             
             return new Vector2(depthBias, normalBias);
         }
