@@ -27,15 +27,11 @@ namespace Game.Render {
             var light = data.cullingResults.visibleLights[data.mainLightIndex];
             data.cullingResults.ComputeDirectionalShadowMatricesAndCullingPrimitives(0, 0, 1, new Vector3(1, 0, 0), shadowResolution, light.light.shadowNearPlane,
             out var viewMatrix, out var projMatrix, out var shadowSplitData);
-
-            cmd.SetGlobalDepthBias(1.0f, 2.5f);
             
             var viewport = new Rect(0, 0, shadowResolution, shadowResolution);
             cmd.SetViewport(viewport);
 
-            var scissor = new Rect(viewport.x + 4, viewport.y + 4, viewport.width - 8, viewport.height - 8);
-            cmd.EnableScissorRect(scissor);
-
+            cmd.SetGlobalDepthBias(1.0f, 2.5f);
             cmd.SetViewProjectionMatrices(viewMatrix, projMatrix);
             context.ExecuteCommandBuffer(cmd);
             cmd.Clear();
@@ -46,10 +42,14 @@ namespace Game.Render {
             var worldToShadowMatrix = this.CalculateWorldToShadowMatrix(ref viewMatrix, ref projMatrix);
             context.DrawShadows(ref shadowSettings);
 
-            cmd.DisableScissorRect();
             cmd.SetGlobalDepthBias(0.0f, 0.0f);
             cmd.SetGlobalTexture(RenderConst.SHADOW_TEXTURE_ID, rti);
             cmd.SetGlobalMatrix(RenderConst.WORLD_TO_SHADOW_MTX_ID, worldToShadowMatrix);
+
+            var lightDirection = -light.localToWorldMatrix.GetColumn(2);
+            cmd.SetGlobalVector(RenderConst.MAIN_LIGHT_DIRECTION_ID, lightDirection);
+            // cmd.SetGlobalVector(RenderConst.SHADOW_BIAS_ID, )
+            
             context.ExecuteCommandBuffer(cmd);
             context.SetupCameraProperties(data.camera);
             cmd.Clear();

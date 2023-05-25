@@ -10,6 +10,7 @@ namespace Game.Render {
         [Range(0.25f, 2)]
         public float RenderScale = 1;
         public ShadowResolution ShadowResolution = ShadowResolution._2048;
+        public float shadowDistance = 50;
 
         public override Material defaultMaterial {
             get {

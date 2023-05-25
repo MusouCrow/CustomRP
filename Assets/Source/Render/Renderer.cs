@@ -25,7 +25,7 @@ namespace Game.Render {
 
         public void Render(ref ScriptableRenderContext context, Camera camera) {
             camera.TryGetCullingParameters(out var cullingParameters);
-            cullingParameters.shadowDistance = 50;
+            cullingParameters.shadowDistance = this.asset.shadowDistance;
 
             var cullingResults = context.Cull(ref cullingParameters);
             context.SetupCameraProperties(camera);
