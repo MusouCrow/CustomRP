@@ -5,6 +5,7 @@ using UnityEngine.Rendering;
 namespace Game.Render {
     public class Renderer {
         private List<IRenderPass> passes;
+        private List<IRenderPass> culledPasses;
         private LaviRenderPipelineAsset asset;
 
         public Renderer(LaviRenderPipelineAsset asset) {
@@ -18,6 +19,7 @@ namespace Game.Render {
                 new FinalPass()
             };
 
+            this.culledPasses = new List<IRenderPass>(this.passes.Count);
             GraphicsSettings.useScriptableRenderPipelineBatching = true;
         }
 
@@ -31,15 +33,24 @@ namespace Game.Render {
             var data = new RenderData() {
                 camera = camera,
                 cullingResults = cullingResults,
-                cameraRTD = RenderUtil.CreateCameraRenderTextureDescriptor(camera, this.asset.MSAA, this.asset.RenderScale)
+                cameraRTD = RenderUtil.CreateCameraRenderTextureDescriptor(camera, this.asset.MSAA, this.asset.RenderScale),
+                mainLightIndex = RenderUtil.GetMainLightIndex(ref cullingResults)
             };
 
+            this.culledPasses.Clear();
+
             for (int i = 0; i < this.passes.Count; i++) {
-                this.passes[i].Render(ref context, ref data);
+                if (this.passes[i].Setup(ref context, ref data)) {
+                    this.culledPasses.Add(this.passes[i]);
+                }
             }
 
-            for (int i = this.passes.Count - 1; i >= 0; i--) {
-                this.passes[i].Clean(ref context, ref data);
+            for (int i = 0; i < this.culledPasses.Count; i++) {
+                this.culledPasses[i].Render(ref context, ref data);
+            }
+
+            for (int i = this.culledPasses.Count - 1; i >= 0; i--) {
+                this.culledPasses[i].Clean(ref context, ref data);
             }
 
             context.Submit();

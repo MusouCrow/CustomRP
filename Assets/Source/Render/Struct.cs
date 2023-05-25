@@ -6,6 +6,7 @@ namespace Game.Render {
         public Camera camera;
         public CullingResults cullingResults;
         public RenderTextureDescriptor cameraRTD;
+        public int mainLightIndex;
     }
 
     public enum MSAASamples {

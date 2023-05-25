@@ -26,7 +26,9 @@ Varyings Vert(Attributes input)
 
 float4 Frag(Varyings input) : SV_Target
 {
+    float4 color = _Color;
     float shadowAttenuation = ShadowAttenuation(input.positionWS);
+    color.rgb *= shadowAttenuation;
 
-    return _Color;
+    return color;
 }

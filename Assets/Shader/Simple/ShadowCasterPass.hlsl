@@ -16,8 +16,15 @@ Varyings Vert(Attributes input)
 {
     Varyings output;
     float4 positionWS = TransformObjectToWorld(input.positionOS);
-    output.positionCS = TransformWorldToHClip(positionWS);
-    output.positionCS.z = min(output.positionCS.z, output.positionCS.w * UNITY_NEAR_CLIP_VALUE);
+    float4 positionCS = TransformWorldToHClip(positionWS);
+
+#if UNITY_REVERSED_Z
+    positionCS.z = min(positionCS.z, UNITY_NEAR_CLIP_VALUE);
+#else
+    positionCS.z = max(positionCS.z, UNITY_NEAR_CLIP_VALUE);
+#endif
+
+    output.positionCS = positionCS;
 
     return output;
 }

@@ -3,6 +3,10 @@ using UnityEngine.Rendering;
 
 namespace Game.Render {
     public class SetupPass : IRenderPass {
+        public bool Setup(ref ScriptableRenderContext context, ref RenderData data) {
+            return true;
+        }
+
         public void Render(ref ScriptableRenderContext context, ref RenderData data) {
             var cmd = CommandBufferPool.Get("SetupPass");
             var tid = RenderConst.CAMERA_TEXTURE_ID;

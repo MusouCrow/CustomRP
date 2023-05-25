@@ -38,5 +38,21 @@ namespace Game.Render {
 
             return rtd;
         }
+
+        public static int GetMainLightIndex(ref CullingResults cullingResults) {
+            if (cullingResults.visibleLights.Length == 0) {
+                return -1;
+            }
+
+            for (int i = 0; i < cullingResults.visibleLights.Length; i++) {
+                var light = cullingResults.visibleLights[i];
+
+                if (light.lightType == LightType.Directional && light.light.shadows != LightShadows.None) {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
     }
 }

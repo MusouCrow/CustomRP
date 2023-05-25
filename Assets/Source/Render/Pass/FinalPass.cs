@@ -4,6 +4,10 @@ using UnityEngine.Experimental.Rendering;
 
 namespace Game.Render {
     public class FinalPass : IRenderPass {
+        public bool Setup(ref ScriptableRenderContext context, ref RenderData data) {
+            return true;
+        }
+
         public void Render(ref ScriptableRenderContext context, ref RenderData data) {
             var cmd = CommandBufferPool.Get("FinalPass");
 

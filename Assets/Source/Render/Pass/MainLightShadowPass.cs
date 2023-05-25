@@ -10,19 +10,25 @@ namespace Game.Render {
             this.asset = asset;
         }
 
-        public void Render(ref ScriptableRenderContext context, ref RenderData data) {
-            if (!this.IsActive(ref data)) {
-                return;
+        public bool Setup(ref ScriptableRenderContext context, ref RenderData data) {
+            if (data.mainLightIndex == -1) {
+                return false;
             }
+            
+            return data.cullingResults.GetShadowCasterBounds(data.mainLightIndex, out var bounds);
+        }
 
+        public void Render(ref ScriptableRenderContext context, ref RenderData data) {
             var cmd = CommandBufferPool.Get("MainLightShadowPass");
 
             int shadowResolution = (int)this.asset.ShadowResolution;
             var rti = this.ReadyTexture(cmd, ref context, ref data, shadowResolution);
 
-            var light = data.cullingResults.visibleLights[0];
+            var light = data.cullingResults.visibleLights[data.mainLightIndex];
             data.cullingResults.ComputeDirectionalShadowMatricesAndCullingPrimitives(0, 0, 1, new Vector3(1, 0, 0), shadowResolution, light.light.shadowNearPlane,
             out var viewMatrix, out var projMatrix, out var shadowSplitData);
+
+            cmd.SetGlobalDepthBias(1.0f, 2.5f);
             
             var viewport = new Rect(0, 0, shadowResolution, shadowResolution);
             cmd.SetViewport(viewport);
@@ -37,15 +43,11 @@ namespace Game.Render {
             var shadowSettings = new ShadowDrawingSettings(data.cullingResults, 0);
             shadowSettings.splitData = shadowSplitData;
 
-            var tileMatrix = Matrix4x4.identity;
-            tileMatrix.m00 = tileMatrix.m11 = 0.5f;
-            tileMatrix.m03 = tileMatrix.m13 = 0;
             var worldToShadowMatrix = this.CalculateWorldToShadowMatrix(ref viewMatrix, ref projMatrix);
-            // worldToShadowMatrix = tileMatrix * worldToShadowMatrix;
-
             context.DrawShadows(ref shadowSettings);
 
             cmd.DisableScissorRect();
+            cmd.SetGlobalDepthBias(0.0f, 0.0f);
             cmd.SetGlobalTexture(RenderConst.SHADOW_TEXTURE_ID, rti);
             cmd.SetGlobalMatrix(RenderConst.WORLD_TO_SHADOW_MTX_ID, worldToShadowMatrix);
             context.ExecuteCommandBuffer(cmd);
@@ -56,32 +58,11 @@ namespace Game.Render {
         }
 
         public void Clean(ref ScriptableRenderContext context, ref RenderData data) {
-            if (!this.IsActive(ref data)) {
-                return;
-            }
-
             var cmd = CommandBufferPool.Get("MainLightShadowPass");
             var tid = RenderConst.SHADOW_TEXTURE_ID;
             cmd.ReleaseTemporaryRT(tid);
             context.ExecuteCommandBuffer(cmd);
             CommandBufferPool.Release(cmd);
-        }
-
-        private bool IsActive(ref RenderData data) {
-            if (data.cullingResults.visibleLights.Length == 0) {
-                return false;
-            }
-
-            var first = data.cullingResults.visibleLights[0];
-
-            if (first.lightType != LightType.Directional) {
-                return false;
-            }
-            else if (first.light.shadows == LightShadows.None) {
-                return false;
-            }
-
-            return true;
         }
 
         private RenderTargetIdentifier ReadyTexture(CommandBuffer cmd, ref ScriptableRenderContext context, ref RenderData data, int size) {
@@ -109,10 +90,10 @@ namespace Game.Render {
 
         private Matrix4x4 CalculateWorldToShadowMatrix(ref Matrix4x4 viewMatrix, ref Matrix4x4 projMatrix) {
             if (SystemInfo.usesReversedZBuffer) {
-                projMatrix.m20 -= projMatrix.m20;
-                projMatrix.m21 -= projMatrix.m21;
-                projMatrix.m22 -= projMatrix.m22;
-                projMatrix.m23 -= projMatrix.m23;
+                projMatrix.m20 = -projMatrix.m20;
+                projMatrix.m21 = -projMatrix.m21;
+                projMatrix.m22 = -projMatrix.m22;
+                projMatrix.m23 = -projMatrix.m23;
             }
 
             // [-1, 1] -> [0, 1]

@@ -19,6 +19,10 @@ namespace Game.Render {
             this.filteringSettings = new FilteringSettings(renderQueueRange);
         }
 
+        public bool Setup(ref ScriptableRenderContext context, ref RenderData data) {
+            return true;
+        }
+
         public void Render(ref ScriptableRenderContext context, ref RenderData data) {
             var drawingSettings = RenderUtil.CreateDrawingSettings(ref data, this.lightModes, this.IsOpaque);
             context.DrawRenderers(data.cullingResults, ref drawingSettings, ref this.filteringSettings);
