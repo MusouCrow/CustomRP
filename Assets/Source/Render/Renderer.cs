@@ -20,12 +20,12 @@ namespace Game.Render {
             };
 
             this.culledPasses = new List<IRenderPass>(this.passes.Count);
-            GraphicsSettings.useScriptableRenderPipelineBatching = true;
+            GraphicsSettings.useScriptableRenderPipelineBatching = this.asset.SRPBatch;
         }
 
         public void Render(ref ScriptableRenderContext context, Camera camera) {
             camera.TryGetCullingParameters(out var cullingParameters);
-            cullingParameters.shadowDistance = this.asset.shadowDistance;
+            cullingParameters.shadowDistance = this.asset.ShadowDistance;
 
             var cullingResults = context.Cull(ref cullingParameters);
             context.SetupCameraProperties(camera);

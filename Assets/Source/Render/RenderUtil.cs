@@ -9,7 +9,9 @@ namespace Game.Render {
             var criteria = isOpaque ? SortingCriteria.CommonOpaque : SortingCriteria.CommonTransparent;
             var sortingSettings = new SortingSettings(data.camera) {criteria = criteria};
             var tagId = new ShaderTagId(lightMode);
-            var drawingSettings = new DrawingSettings(tagId, sortingSettings);
+            var drawingSettings = new DrawingSettings(tagId, sortingSettings) {
+                enableInstancing = data.camera.cameraType != CameraType.Preview
+            };
             
             return drawingSettings;
         }

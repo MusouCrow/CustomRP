@@ -7,6 +7,8 @@ struct Attributes
 {
     float4 positionOS : POSITION;
     float3 normalOS : NORMAL;
+
+    UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
 struct Varyings
@@ -17,6 +19,8 @@ struct Varyings
 Varyings Vert(Attributes input)
 {
     Varyings output;
+
+    UNITY_SETUP_INSTANCE_ID(input);
     
     float3 normalWS = TransformObjectToWorldNormal(input.positionOS);
     float3 positionWS = TransformObjectToWorld(input.positionOS);

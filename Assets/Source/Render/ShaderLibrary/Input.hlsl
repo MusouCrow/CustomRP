@@ -2,20 +2,6 @@
 
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
 
-CBUFFER_START(UnityPerDraw)
-float4x4 unity_ObjectToWorld;
-float4x4 unity_WorldToObject;
-float4 unity_LODFade;
-half4 unity_WorldTransformParams;
-CBUFFER_END
-
-float4x4 glstate_matrix_projection;
-float4x4 unity_MatrixV;
-float4x4 unity_MatrixInvV;
-float4x4 unity_MatrixInvP;
-float4x4 unity_MatrixVP;
-float4x4 unity_MatrixInvVP;
-
 #define UNITY_MATRIX_M     unity_ObjectToWorld
 #define UNITY_MATRIX_I_M   unity_WorldToObject
 #define UNITY_MATRIX_V     unity_MatrixV
@@ -30,6 +16,20 @@ float4x4 unity_MatrixInvVP;
 #define UNITY_MATRIX_MVP   mul(UNITY_MATRIX_VP, UNITY_MATRIX_M)
 #define UNITY_PREV_MATRIX_M   0
 #define UNITY_PREV_MATRIX_I_M 0
+
+CBUFFER_START(UnityPerDraw)
+float4x4 unity_ObjectToWorld;
+float4x4 unity_WorldToObject;
+float4 unity_LODFade;
+half4 unity_WorldTransformParams;
+CBUFFER_END
+
+float4x4 glstate_matrix_projection;
+float4x4 unity_MatrixV;
+float4x4 unity_MatrixInvV;
+float4x4 unity_MatrixInvP;
+float4x4 unity_MatrixVP;
+float4x4 unity_MatrixInvVP;
 
 float4x4 OptimizeProjectionMatrix(float4x4 M)
 {
