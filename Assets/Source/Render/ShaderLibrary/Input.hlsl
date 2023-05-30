@@ -45,3 +45,21 @@ float4x4 OptimizeProjectionMatrix(float4x4 M)
     M._12_42 = 0;
     return M;
 }
+
+// Values used to linearize the Z buffer (http://www.humus.name/temp/Linearize%20depth.txt)
+// x = 1-far/near
+// y = far/near
+// z = x/far
+// w = y/far
+// or in case of a reversed depth buffer (UNITY_REVERSED_Z is 1)
+// x = -1+far/near
+// y = 1
+// z = x/far
+// w = 1/far
+float4 _ZBufferParams;
+
+// x = 1 or -1 (-1 if projection is flipped)
+// y = near plane
+// z = far plane
+// w = 1/far plane
+float4 _ProjectionParams;

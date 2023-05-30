@@ -55,7 +55,7 @@ namespace Game.Render {
             var softShadow = light.light.shadows == LightShadows.Soft;
             var shadowBias = RenderUtil.GetShadowBias(ref light, projMatrix, shadowResolution);
             var shadowParam = new Vector4(shadowBias.x, shadowBias.y, light.light.shadowStrength, softShadow ? 1 : 0);
-            cmd.SetGlobalVector(RenderConst.SHADOW_PARAM_ID, shadowParam);
+            cmd.SetGlobalVector(RenderConst.SHADOW_PARAMS_ID, shadowParam);
             
             var shadowTextureSize = new Vector4(1.0f / shadowResolution, 1.0f / shadowResolution, shadowResolution, shadowResolution);
             cmd.SetGlobalVector(RenderConst.SHADOW_TEXUTRE_SIZE_ID, shadowTextureSize);

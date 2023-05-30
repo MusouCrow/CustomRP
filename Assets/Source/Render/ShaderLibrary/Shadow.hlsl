@@ -10,7 +10,7 @@ SAMPLER_CMP(sampler_ShadowTexture);
 CBUFFER_START(MainLightShadows)
 float4x4 _WorldToShadowMatrix;
 float3 _LightDirection;
-float4 _ShadowParam; // x: Depth Bias, y: Normal Bias, z: Shadow Strength, w: Is Soft Shadow
+float4 _ShadowParams; // x: Depth Bias, y: Normal Bias, z: Shadow Strength, w: Is Soft Shadow
 float4 _ShadowTexture_TexelSize; // x: 1 / width, y: 1 / height, z: width, h: height
 CBUFFER_END
 
@@ -52,7 +52,7 @@ float ShadowAttenuation(float3 positionWS)
         float attenuation = SampleShadowMap(shadowCoord);
     #endif
     
-    attenuation = LerpWhiteTo(attenuation, _ShadowParam.z);
+    attenuation = LerpWhiteTo(attenuation, _ShadowParams.z);
 #else
     float attenuation = 1;
 #endif
@@ -63,9 +63,9 @@ float ShadowAttenuation(float3 positionWS)
 float3 ApplyShadowBias(float3 positionWS, float3 normalWS)
 {
     float invNdotL = 1.0 - saturate(dot(_LightDirection, normalWS));
-    float scale = invNdotL * _ShadowParam.y;
+    float scale = invNdotL * _ShadowParams.y;
     
-    positionWS = _LightDirection * _ShadowParam.xxx + positionWS;
+    positionWS = _LightDirection * _ShadowParams.xxx + positionWS;
     positionWS = normalWS * scale.xxx + positionWS;
     
     return positionWS;

@@ -21,10 +21,9 @@ float4 VFXTransformFinalColor(float4 color)
     return color;
 }
 
-// TODO
 float2 VFXGetNormalizedScreenSpaceUV(float4 positionCS)
 {
-    return 0;
+    return GetNormalizedScreenSpaceUV(positionCS);
 }
 
 // TODO
@@ -101,7 +100,7 @@ float4x4 VFXGetObjectToWorldMatrix()
 #ifdef HAVE_VFX_MODIFICATION
     return GetRawUnityObjectToWorld();
 #else
-    
+    return GetObjectToWorldMatrix();
 #endif
 }
 

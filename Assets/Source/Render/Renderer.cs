@@ -12,8 +12,9 @@ namespace Game.Render {
             this.asset = asset;
 
             this.passes = new List<IRenderPass>() {
+                new SetupPass(this.asset),
                 new MainLightShadowPass(this.asset),
-                new SetupPass(),
+                new ReadyDrawPass(),
                 new DrawObjectPass(true),
                 new DrawObjectPass(false),
                 new FinalPass()
