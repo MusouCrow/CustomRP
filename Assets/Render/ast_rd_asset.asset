@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DefaultShader: {fileID: 4800000, guid: 8b3ac8b8fac0148fdb9aa6a678cf657a, type: 3}
   DefaultMaterial: {fileID: 2100000, guid: c2978d5f86a954fa7a11481795a0b2a7, type: 2}
-  MSAA: 2
-  RenderScale: 1.2
+  RenderScale: 2
   ShadowResolution: 2048
-  shadowDistance: 50
+  ShadowDistance: 50
+  SRPBatch: 1
