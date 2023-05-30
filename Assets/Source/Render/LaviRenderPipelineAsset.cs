@@ -6,7 +6,6 @@ namespace Game.Render {
     public class LaviRenderPipelineAsset : RenderPipelineAsset {
         public Shader DefaultShader;
         public Material DefaultMaterial;
-        public MSAASamples MSAA = MSAASamples.None;
         [Range(0.25f, 2)]
         public float RenderScale = 1;
         public ShadowResolution ShadowResolution = ShadowResolution._2048;

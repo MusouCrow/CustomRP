@@ -14,10 +14,7 @@ namespace Game.Render {
             var rti = new RenderTargetIdentifier(tid);
             
             cmd.GetTemporaryRT(tid, rtd, FilterMode.Bilinear);
-            cmd.SetRenderTarget(rti, 
-                RenderBufferLoadAction.Load, RenderBufferStoreAction.Store,
-                RenderBufferLoadAction.Load, RenderBufferStoreAction.DontCare
-            );
+            cmd.SetRenderTarget(rti);
             cmd.ClearRenderTarget(true, true, data.camera.backgroundColor.linear);
 
             context.ExecuteCommandBuffer(cmd);

@@ -33,7 +33,7 @@ namespace Game.Render {
             var data = new RenderData() {
                 camera = camera,
                 cullingResults = cullingResults,
-                cameraRTD = RenderUtil.CreateCameraRenderTextureDescriptor(camera, this.asset.MSAA, this.asset.RenderScale),
+                cameraRTD = RenderUtil.CreateCameraRenderTextureDescriptor(camera, MSAASamples.None, this.asset.RenderScale),
                 mainLightIndex = RenderUtil.GetMainLightIndex(ref cullingResults)
             };
 
