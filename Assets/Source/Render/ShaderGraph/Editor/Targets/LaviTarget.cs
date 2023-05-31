@@ -45,12 +45,16 @@ namespace Game.Render.ShaderGraph.Editor {
         }
 
         public override void GetFields(ref TargetFieldContext context) {
+            context.AddField(Fields.GraphVertex);
             context.AddField(Fields.GraphPixel);
+            
             this.activeSubTarget.value.GetFields(ref context);
         }
 
         public override void GetActiveBlocks(ref TargetActiveBlockContext context) {
+            context.AddBlock(BlockFields.VertexDescription.Position);
             context.AddBlock(BlockFields.SurfaceDescription.BaseColor);
+
             this.activeSubTarget.value.GetActiveBlocks(ref context);
         }
 
@@ -74,6 +78,21 @@ namespace Game.Render.ShaderGraph.Editor {
 
         public override bool WorksWithSRP(RenderPipelineAsset scriptableRenderPipeline) {
             return scriptableRenderPipeline is LaviRenderPipelineAsset;
+        }
+
+        public bool TrySetActiveSubTarget(Type subTargetType) {
+            if (!subTargetType.IsSubclassOf(typeof(SubTarget))) {
+                return false;
+            }
+            
+            foreach (var subTarget in this.subTargets) {
+                if (subTarget.GetType().Equals(subTargetType)) {
+                    this.activeSubTarget = subTarget;
+                    return true;
+                }
+            }
+            
+            return false;
         }
     }
 }

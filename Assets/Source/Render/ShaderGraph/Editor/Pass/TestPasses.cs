@@ -16,20 +16,30 @@ namespace Game.Render.ShaderGraph.Editor {
                 sharedTemplateDirectories = new string[] {ShaderGraphConst.TEMPLATE_PATH},
 
                 // Port Mask
-                validVertexBlocks = new BlockFieldDescriptor[] {},
-                validPixelBlocks = new BlockFieldDescriptor[] {},
+                validVertexBlocks = new BlockFieldDescriptor[] {BlockFields.VertexDescription.Position},
+                validPixelBlocks = new BlockFieldDescriptor[] {BlockFields.SurfaceDescription.BaseColor},
 
                 // Fields
-                structs = new StructCollection(),
+                structs = new StructCollection() {
+                    Structs.Attributes,
+                    Structs.SurfaceDescriptionInputs,
+                    Structs.VertexDescriptionInputs
+                },
                 requiredFields = new FieldCollection(),
                 fieldDependencies = new DependencyCollection(),
 
                 // Conditional State
                 renderStates = new RenderStateCollection(),
-                pragmas = new PragmaCollection(),
+                pragmas = new PragmaCollection() {
+                    Pragma.Vertex("Vert"), 
+                    Pragma.Fragment("Frag"), 
+                    Pragma.MultiCompileInstancing
+                },
                 defines = new DefineCollection(),
                 keywords = new KeywordCollection(),
-                includes = new IncludeCollection(),
+                includes = new IncludeCollection() {
+                    {ShaderGraphConst.SHADERLIB_CORE, IncludeLocation.Pregraph}   
+                },
             };
 
             return result;
