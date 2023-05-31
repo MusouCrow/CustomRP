@@ -1,5 +1,4 @@
 using System;
-using UnityEngine.Rendering;
 using UnityEditor;
 using UnityEditor.ShaderGraph;
 
@@ -17,6 +16,7 @@ namespace Game.Render.ShaderGraph.Editor {
 
         public override void Setup(ref TargetSetupContext context) {
             context.AddAssetDependency(SOURCE_GUID, AssetCollection.Flags.SourceDependency);
+            context.AddSubShader(TestPasses.SubShader());
         }
 
         public override void GetFields(ref TargetFieldContext context) {
