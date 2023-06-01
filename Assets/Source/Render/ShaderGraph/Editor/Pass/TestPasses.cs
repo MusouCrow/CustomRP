@@ -13,7 +13,10 @@ namespace Game.Render.ShaderGraph.Editor {
 
                 // Template
                 passTemplatePath = ShaderGraphConst.SHADER_PASS_PATH,
-                sharedTemplateDirectories = new string[] {ShaderGraphConst.TEMPLATE_PATH},
+                sharedTemplateDirectories = new string[] {
+                    ShaderGraphConst.INNER_TEMPLATE_PATH,
+                    ShaderGraphConst.TEMPLATE_PATH
+                },
 
                 // Port Mask
                 validVertexBlocks = new BlockFieldDescriptor[] {BlockFields.VertexDescription.Position},
@@ -38,7 +41,8 @@ namespace Game.Render.ShaderGraph.Editor {
                 defines = new DefineCollection(),
                 keywords = new KeywordCollection(),
                 includes = new IncludeCollection() {
-                    {ShaderGraphConst.SHADERLIB_CORE, IncludeLocation.Pregraph}   
+                    {ShaderGraphConst.SHADERLIB_CORE, IncludeLocation.Pregraph},
+                    {ShaderGraphConst.SHADERLIB_FUNCTIONS, IncludeLocation.Pregraph},
                 },
             };
 
