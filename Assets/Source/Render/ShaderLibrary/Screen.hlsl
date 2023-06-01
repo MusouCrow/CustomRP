@@ -43,3 +43,12 @@ float2 GetNormalizedScreenSpaceUV(float4 positionCS)
 {
     return GetNormalizedScreenSpaceUV(positionCS.xy);
 }
+
+float4 ComputeScreenPos(float4 positionCS)
+{
+    float4 ndc = positionCS * 0.5f;
+    ndc.xy = float2(ndc.x, ndc.y * _ProjectionParams.x) + ndc.w;
+    ndc.zw = positionCS.zw;
+
+    return ndc;
+}

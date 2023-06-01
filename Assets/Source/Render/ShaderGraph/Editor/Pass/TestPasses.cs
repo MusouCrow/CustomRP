@@ -25,6 +25,7 @@ namespace Game.Render.ShaderGraph.Editor {
                 // Fields
                 structs = new StructCollection() {
                     Structs.Attributes,
+                    LaviStructs.Varyings,
                     Structs.SurfaceDescriptionInputs,
                     Structs.VertexDescriptionInputs
                 },
@@ -43,6 +44,7 @@ namespace Game.Render.ShaderGraph.Editor {
                 includes = new IncludeCollection() {
                     {ShaderGraphConst.SHADERLIB_CORE, IncludeLocation.Pregraph},
                     {ShaderGraphConst.SHADERLIB_FUNCTIONS, IncludeLocation.Pregraph},
+                    {ShaderGraphConst.SHADERLIB_FORWARD_PASS, IncludeLocation.Postgraph},
                 },
             };
 
