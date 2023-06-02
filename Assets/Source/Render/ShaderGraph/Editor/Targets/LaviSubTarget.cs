@@ -16,7 +16,7 @@ namespace Game.Render.ShaderGraph.Editor {
 
         public override void Setup(ref TargetSetupContext context) {
             context.AddAssetDependency(SOURCE_GUID, AssetCollection.Flags.SourceDependency);
-            context.AddSubShader(TestPasses.SubShader());
+            context.AddSubShader(TestPasses.SubShader(this.target, this.target.RenderType, this.target.RenderQueue));
         }
 
         public override void GetFields(ref TargetFieldContext context) {
@@ -24,14 +24,12 @@ namespace Game.Render.ShaderGraph.Editor {
         }
 
         public override void GetActiveBlocks(ref TargetActiveBlockContext context) {
-
+            context.AddBlock(BlockFields.VertexDescription.Position);
+            context.AddBlock(BlockFields.SurfaceDescription.BaseColor);
         }
 
         public override void GetPropertiesGUI(ref TargetPropertyGUIContext context, Action onChange, Action<String> registerUndo) {
-            var target = this.target as LaviTarget;
             
-            // universalTarget.AddDefaultMaterialOverrideGUI(ref context, onChange, registerUndo);
-            // universalTarget.AddDefaultSurfacePropertiesGUI(ref context, onChange, registerUndo, showReceiveShadows: false);
         }
     }
 }
